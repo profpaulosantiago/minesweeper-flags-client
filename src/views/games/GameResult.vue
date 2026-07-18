@@ -28,6 +28,8 @@
         <v-btn color="info" @click="playAgain()" :ripple="false">
           Play again
         </v-btn>
+        <v-btn color="info" @click="copyResults()" :ripple="false">Copy results</v-btn>
+        <v-btn color="info" @click="copyMap()" :ripple="false">Copy map</v-btn>
         <v-btn color="warning" @click="showResult = false" :ripple="false">
           View Map
         </v-btn>
@@ -40,6 +42,7 @@
 <script>
 import Invites from "../lobby/Invites";
 import { mapState } from "vuex";
+import gameTools from "./gameTools";
 
 export default {
   name: "GameResult",
@@ -51,6 +54,53 @@ export default {
   },
   components: { Invites },
   methods: {
+    copyResults() {
+      let game = this.game;
+      let players = game.map.players.toArray();
+      let header = ""
+      for (let p of players) {
+        if (header.length > 0) header += " vs. "
+        header += p.controller.name;
+      }
+      let scores = ""
+      for (let p of players) {
+        if (scores.length > 0) scores += " - "
+        scores += "" + p.score;
+      }
+
+      let link = "https://play.minesweeperflags.net/#/stats/game/" + game.gameId;
+      window.navigator.clipboard.writeText(header + "\n" + scores + "\n" + link);
+    },
+    copyMap() {
+      let game = this.game;
+      // let bomb = "💣"
+      // let boom = "💥"
+
+      let players = game.map.players.toArray();
+      let header = ""
+      for (let p of players) {
+        if (header.length > 0) header += " vs. "
+        header += p.controller.name;
+      }
+      let scores = ""
+      for (let p of players) {
+        if (scores.length > 0) scores += " - "
+        scores += "" + p.score;
+      }
+
+      let map = ""
+      for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 16; x++) {
+          let f = game.map.fieldAt(x, y);
+          let fieldEmoji = gameTools.fieldEmoji(f);
+          map += fieldEmoji;
+        }
+        map += "\n"
+      }
+
+      let link = "https://play.minesweeperflags.net/#/stats/game/" + game.gameId;
+      window.navigator.clipboard.writeText(header + "\n" + scores + "\n" + map + "\n" + link);
+    },
     playAgain() {
       this.showResult = false;
       let opponent = this.game.playerData.find(pl => !pl.controllable).player
@@ -99,7 +149,7 @@ export default {
 };
 </script>
 <style scoped>
-.show-result-dialog {
-  width: 30%;
+.v-dialog.show-result-dialog {
+  width: auto;
 }
 </style>

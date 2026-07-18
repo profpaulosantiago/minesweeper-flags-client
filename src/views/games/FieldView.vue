@@ -13,6 +13,8 @@
   </transition>
 </template>
 <script>
+import gameTools from './gameTools';
+
 export default {
   name: "FieldView",
   props: ["field", "onClick", "onHighlight", "highlighted"],
@@ -35,19 +37,7 @@ export default {
   },
   computed: {
     fieldImage() {
-      if (this.field.blocked) {
-        return "blocked";
-      }
-      if (!this.field.clicked) {
-        return "unknown";
-      }
-      if (this.field.isFoundMine) {
-        let actualPlayer = this.field.whoClicked
-          ? this.field.whoClicked.index + 1
-          : 0;
-        return "m" + actualPlayer;
-      }
-      return this.field.neighboringMines;
+      return gameTools.fieldImage(this.field);
     }
   }
 };

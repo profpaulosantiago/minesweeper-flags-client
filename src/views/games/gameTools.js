@@ -58,9 +58,55 @@ function createLocalGame() {
   return game;
 }
 
+function fieldEmoji(field) {
+  if (field.blocked) {
+    return "⬛";
+  }
+  if (!field.clicked) {
+    return "🟩";
+  }
+  if (field.isFoundMine) {
+    let mines = ["⚫", "🔵", "🔴"];
+    let actualPlayer = field.whoClicked
+      ? field.whoClicked.index + 1
+      : 0;
+    return mines[actualPlayer];
+  }
+  let number = [
+    "0️⃣",
+    "1️⃣",
+    "2️⃣",
+    "3️⃣",
+    "4️⃣",
+    "5️⃣",
+    "6️⃣",
+    "7️⃣",
+    "8️⃣",
+  ];
+  return number[field.neighboringMines];
+}
+
+function fieldImage(field) {
+  if (field.blocked) {
+    return "blocked";
+  }
+  if (!field.clicked) {
+    return "unknown";
+  }
+  if (field.isFoundMine) {
+    let actualPlayer = field.whoClicked
+      ? field.whoClicked.index + 1
+      : 0;
+    return "m" + actualPlayer;
+  }
+  return field.neighboringMines;
+}
+
 export default {
   createGame: createGame,
   createGameFromMap: createGameFromMap,
   createLocalGame: createLocalGame,
-  setPlayerNames: setPlayerNames
+  setPlayerNames: setPlayerNames,
+  fieldEmoji,
+  fieldImage,
 };

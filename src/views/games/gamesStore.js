@@ -42,7 +42,7 @@ export default {
     incomplete(state, data) {
       // params: ["gameId", "players", "scores", "clicks", "lastActive"]
       let existingIndex = state.incompleteGames.indexOf(
-        game => game.gameId === data.gameId
+        game => game.gameId == data.gameId
       );
       if (existingIndex >= 0) {
         state.incompleteGames[existingIndex] = data;
